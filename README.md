@@ -36,47 +36,13 @@ SoundZoo displays a colorful grid of **15 animals** and **9 birds**. Click any c
 
 ---
 
-## How to Run
-
-### Option 1 — Open directly in browser
+## Open directly in browser
 1. Download or clone this repository.
 2. Double-click `index.html` to open it in your browser.
 
-### Option 2 — VS Code Live Server (recommended)
-1. Install the **Live Server** extension in VS Code.
-2. Right-click `index.html` → **Open with Live Server**.
-3. The app opens at `http://127.0.0.1:5500`.
-
 > **Tip:** Speech Synthesis works best in **Google Chrome** or **Microsoft Edge**.
 > On Firefox, voices may load with a short delay on first click.
-
----
-
-## Project Structure
-
 ```
-SoundZoo/
-│
-├── index.html          ← Main HTML page (semantic structure)
-├── style.css           ← All styles, animations, responsive layout
-├── script.js           ← Data arrays, DOM generation, Speech, MP3 upload
-├── assets/
-│   ├── images/         ← Place your own animal images here
-│   └── sounds/         ← Place your own animal sound files here (MP3, WAV)
-├── README.md           ← Project documentation (this file)
-└── .gitignore          ← Files excluded from Git
-```
-
----
-
-## Screenshot
-
-> *(Add a screenshot of the running app here)*
-
-![SoundZoo Screenshot](assets/images/screenshot.png)
-
----
-
 ## License
 
 This project is open source and free to use for learning and personal projects.
