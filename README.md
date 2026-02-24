@@ -59,32 +59,12 @@ SoundZoo/
 │
 ├── index.html          ← Main HTML page (semantic structure)
 ├── style.css           ← All styles, animations, responsive layout
-├── script.js           ← Data arrays, DOM generation, Speech, image upload
+├── script.js           ← Data arrays, DOM generation, Speech, MP3 upload
 ├── assets/
-│   └── images/         ← Place your own animal images here
+│   ├── images/         ← Place your own animal images here
+│   └── sounds/         ← Place your own animal sound files here (MP3, WAV)
 ├── README.md           ← Project documentation (this file)
 └── .gitignore          ← Files excluded from Git
-```
-
----
-
-## How to Push to GitHub
-
-```bash
-# 1. Initialize Git (only needed once)
-git init
-
-# 2. Stage all files
-git add .
-
-# 3. Create the first commit
-git commit -m "Initial commit - SoundZoo project"
-
-# 4. Create a new repo on GitHub, then link it
-git remote add origin https://github.com/YOUR_USERNAME/soundzoo.git
-
-# 5. Push to GitHub
-git push -u origin main
 ```
 
 ---
