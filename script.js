@@ -12,6 +12,15 @@
 var customSounds = {};
 
 /* --------------------------------------------------------------------------
+   Modal State — tracks which grid is being added to and pending file data
+   -------------------------------------------------------------------------- */
+
+var currentAddType  = '';   /* 'animal' or 'bird' */
+var currentGridId   = '';
+var pendingImageUrl = '';
+var pendingAudioUrl = '';
+
+/* --------------------------------------------------------------------------
    Data — Animals
    -------------------------------------------------------------------------- */
 
@@ -150,10 +159,15 @@ function createCard(item, gradient) {
   card.setAttribute('aria-label', item.name + ' — click to hear ' + item.sound);
   card.style.background = gradient;
 
+  /* Show uploaded photo if available, otherwise the emoji */
+  var mediaHtml = item.imageUrl
+    ? '<img class="card-image" src="' + item.imageUrl + '" alt="' + item.name + '">'
+    : '<span class="card-emoji" aria-hidden="true">' + item.emoji + '</span>';
+
   card.innerHTML =
     '<button class="edit-sound-btn" title="Upload real sound (MP3)" aria-label="Upload custom sound for ' + item.name + '">🎵</button>' +
     '<input type="file" class="sound-upload-input" accept="audio/*" aria-hidden="true">' +
-    '<span class="card-emoji" aria-hidden="true">' + item.emoji + '</span>' +
+    mediaHtml +
     '<p class="card-name">'  + item.name  + '</p>' +
     '<p class="card-sound">' + item.sound + '</p>' +
     '<div class="card-sound-wave" aria-hidden="true">' +
@@ -215,6 +229,58 @@ function createCard(item, gradient) {
   });
 
   return card;
+}
+
+/* --------------------------------------------------------------------------
+   Add Card — the "+" card that opens the modal
+   -------------------------------------------------------------------------- */
+
+function createAddCard(type, gridId) {
+  var card = document.createElement('div');
+  card.className = 'sound-card add-new-card';
+  card.setAttribute('role', 'button');
+  card.setAttribute('tabindex', '0');
+  card.setAttribute('aria-label', 'Add a new ' + (type === 'animal' ? 'animal' : 'bird'));
+
+  card.innerHTML =
+    '<span class="add-card-plus" aria-hidden="true">＋</span>' +
+    '<p class="card-name">Add ' + (type === 'animal' ? 'Animal' : 'Bird') + '</p>';
+
+  card.addEventListener('click', function () { openAddModal(type, gridId); });
+
+  card.addEventListener('keydown', function (ev) {
+    if (ev.key === 'Enter' || ev.key === ' ') {
+      ev.preventDefault();
+      openAddModal(type, gridId);
+    }
+  });
+
+  return card;
+}
+
+function openAddModal(type, gridId) {
+  currentAddType  = type;
+  currentGridId   = gridId;
+  pendingImageUrl = '';
+  pendingAudioUrl = '';
+
+  /* Update title */
+  document.getElementById('modalTitle').textContent =
+    'Add New ' + (type === 'animal' ? 'Animal' : 'Bird');
+
+  /* Reset form fields and error messages */
+  document.getElementById('addEntryForm').reset();
+  document.getElementById('nameError').textContent      = '';
+  document.getElementById('soundTextError').textContent = '';
+  document.getElementById('imageChosen').textContent    = 'No file chosen';
+  document.getElementById('audioChosen').textContent    = 'No file chosen';
+
+  var imgPreview = document.getElementById('modalImgPreview');
+  imgPreview.src = '';
+  imgPreview.classList.remove('visible');
+
+  document.getElementById('addModal').classList.add('open');
+  document.getElementById('addName').focus();
 }
 
 /* --------------------------------------------------------------------------
@@ -292,6 +358,136 @@ function initImageUpload() {
 }
 
 /* --------------------------------------------------------------------------
+   Add Modal — wire up all modal interactions
+   -------------------------------------------------------------------------- */
+
+function initAddModal() {
+  var overlay    = document.getElementById('addModal');
+  var closeBtn   = document.getElementById('modalCloseBtn');
+  var cancelBtn  = document.getElementById('modalCancelBtn');
+  var form       = document.getElementById('addEntryForm');
+  var imgInput   = document.getElementById('addImage');
+  var audioInput = document.getElementById('addAudio');
+  var imgPreview = document.getElementById('modalImgPreview');
+  var imgChosen  = document.getElementById('imageChosen');
+  var audChosen  = document.getElementById('audioChosen');
+
+  /* ---- Close helpers ---- */
+  function closeModal() {
+    overlay.classList.remove('open');
+    pendingImageUrl = '';
+    pendingAudioUrl = '';
+  }
+
+  closeBtn.addEventListener('click', closeModal);
+  cancelBtn.addEventListener('click', closeModal);
+
+  /* Click outside the modal box */
+  overlay.addEventListener('click', function (e) {
+    if (e.target === overlay) closeModal();
+  });
+
+  /* Escape key */
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && overlay.classList.contains('open')) closeModal();
+  });
+
+  /* ---- Image preview ---- */
+  imgInput.addEventListener('change', function () {
+    var file = imgInput.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      alert('Please select a valid image file (JPG, PNG, GIF, WebP, etc.).');
+      imgInput.value = '';
+      return;
+    }
+
+    imgChosen.textContent = file.name;
+
+    var reader = new FileReader();
+    reader.onload = function (ev) {
+      pendingImageUrl = ev.target.result;
+      imgPreview.src  = ev.target.result;
+      imgPreview.classList.add('visible');
+    };
+    reader.readAsDataURL(file);
+  });
+
+  /* ---- Audio file ---- */
+  audioInput.addEventListener('change', function () {
+    var file = audioInput.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('audio/')) {
+      alert('Please select a valid audio file (MP3, WAV, OGG, etc.).');
+      audioInput.value = '';
+      return;
+    }
+
+    audChosen.textContent = file.name;
+
+    var reader = new FileReader();
+    reader.onload = function (ev) { pendingAudioUrl = ev.target.result; };
+    reader.readAsDataURL(file);
+  });
+
+  /* ---- Form submit ---- */
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    var nameVal  = document.getElementById('addName').value.trim();
+    var emojiVal = document.getElementById('addEmoji').value.trim();
+    var soundVal = document.getElementById('addSoundText').value.trim();
+
+    /* Validate */
+    var valid = true;
+    document.getElementById('nameError').textContent      = '';
+    document.getElementById('soundTextError').textContent = '';
+
+    if (!nameVal) {
+      document.getElementById('nameError').textContent = 'Please enter a name.';
+      valid = false;
+    }
+    if (!soundVal) {
+      document.getElementById('soundTextError').textContent = 'Please enter the sound text.';
+      valid = false;
+    }
+    if (!valid) return;
+
+    /* Build item object */
+    var defaultEmoji = currentAddType === 'animal' ? '🐾' : '🐦';
+    var item = {
+      name:     nameVal,
+      sound:    soundVal,
+      emoji:    emojiVal || defaultEmoji,
+      imageUrl: pendingImageUrl || null
+    };
+
+    /* Pick a random gradient for the new card */
+    var colorArr = currentAddType === 'animal' ? ANIMAL_COLORS : BIRD_COLORS;
+    var gradient = colorArr[Math.floor(Math.random() * colorArr.length)];
+
+    /* Insert new card before the "+" add-card */
+    var grid    = document.getElementById(currentGridId);
+    var addCard = grid.querySelector('.add-new-card');
+    var newCard = createCard(item, gradient);
+
+    /* If user uploaded MP3, store it and mark the card */
+    if (pendingAudioUrl) {
+      customSounds[nameVal] = pendingAudioUrl;
+      newCard.classList.add('has-custom-sound');
+      var editBtn = newCard.querySelector('.edit-sound-btn');
+      editBtn.textContent = '✅';
+      editBtn.title = 'Real sound loaded! Click to replace';
+    }
+
+    grid.insertBefore(newCard, addCard);
+    closeModal();
+  });
+}
+
+/* --------------------------------------------------------------------------
    Init — run after the DOM is fully loaded
    -------------------------------------------------------------------------- */
 
@@ -299,4 +495,9 @@ document.addEventListener('DOMContentLoaded', function () {
   renderCards(ANIMALS, ANIMAL_COLORS, 'animalGrid');
   renderCards(BIRDS,   BIRD_COLORS,   'birdGrid');
   initImageUpload();
+  initAddModal();
+
+  /* Append the "+" cards at the end of each grid */
+  document.getElementById('animalGrid').appendChild(createAddCard('animal', 'animalGrid'));
+  document.getElementById('birdGrid').appendChild(createAddCard('bird', 'birdGrid'));
 });

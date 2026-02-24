@@ -65,6 +65,65 @@
       <p>Made with ❤️ &nbsp;|&nbsp; SoundZoo &copy; 2024 &nbsp;|&nbsp; Click any card to hear the sound!</p>
     </footer>
 
+    <!-- ===== Add Animal / Bird Modal ===== -->
+    <div class="modal-overlay" id="addModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-box">
+        <button class="modal-close-btn" id="modalCloseBtn" type="button" aria-label="Close modal">✕</button>
+        <h3 class="modal-title" id="modalTitle">Add New Animal</h3>
+
+        <form id="addEntryForm" novalidate>
+
+          <!-- Name -->
+          <div class="form-group">
+            <label class="form-label" for="addName">Name <span class="form-required">*</span></label>
+            <input class="form-input" type="text" id="addName" placeholder="e.g. Fox" maxlength="30" autocomplete="off" />
+            <span class="form-error" id="nameError"></span>
+          </div>
+
+          <!-- Emoji -->
+          <div class="form-group">
+            <label class="form-label" for="addEmoji">Emoji <span class="form-hint">(optional — used if no image)</span></label>
+            <input class="form-input form-input--emoji" type="text" id="addEmoji" placeholder="🦊" maxlength="4" />
+          </div>
+
+          <!-- Sound Text -->
+          <div class="form-group">
+            <label class="form-label" for="addSoundText">Sound Text <span class="form-required">*</span></label>
+            <input class="form-input" type="text" id="addSoundText" placeholder="e.g. Ring Ring" maxlength="60" autocomplete="off" />
+            <span class="form-error" id="soundTextError"></span>
+          </div>
+
+          <!-- Image Upload -->
+          <div class="form-group">
+            <span class="form-label">Image <span class="form-hint">(optional)</span></span>
+            <label class="file-pick-label" for="addImage">
+              📷 Choose Image
+              <input type="file" id="addImage" accept="image/*" />
+            </label>
+            <span class="file-chosen" id="imageChosen">No file chosen</span>
+            <img class="modal-img-preview" id="modalImgPreview" src="" alt="Preview" />
+          </div>
+
+          <!-- MP3 Upload -->
+          <div class="form-group">
+            <span class="form-label">MP3 / Audio <span class="form-hint">(optional — plays instead of speech)</span></span>
+            <label class="file-pick-label" for="addAudio">
+              🎵 Choose MP3
+              <input type="file" id="addAudio" accept="audio/*" />
+            </label>
+            <span class="file-chosen" id="audioChosen">No file chosen</span>
+          </div>
+
+          <!-- Actions -->
+          <div class="form-actions">
+            <button type="button" class="modal-cancel-btn" id="modalCancelBtn">Cancel</button>
+            <button type="submit" class="modal-submit-btn">Add Card ✓</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+
     <script src="script.js"></script>
   </body>
 </html>
