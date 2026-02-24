@@ -1,0 +1,507 @@
+/* ==========================================================================
+   SoundZoo — style.css
+   Modern, responsive, production-ready stylesheet
+   ========================================================================== */
+
+/* --- CSS Reset & Base Styles -------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* Background */
+  --color-bg-start:       #1a1a2e;
+  --color-bg-mid:         #16213e;
+  --color-bg-end:         #0f3460;
+
+  /* Text */
+  --color-white:          #ffffff;
+  --color-white-70:       rgba(255, 255, 255, 0.7);
+
+  /* Glass surfaces */
+  --color-glass:          rgba(255, 255, 255, 0.08);
+  --color-glass-border:   rgba(255, 255, 255, 0.15);
+
+  /* Accent (used on title, section border) */
+  --color-accent:         #f6d365;
+  --color-accent-end:     #fda085;
+
+  /* Spacing scale */
+  --space-xs:   0.4rem;
+  --space-sm:   0.75rem;
+  --space-md:   1.25rem;
+  --space-lg:   2rem;
+  --space-xl:   3rem;
+
+  /* Border radius */
+  --radius-card: 16px;
+  --radius-btn:  50px;
+  --radius-img:  12px;
+
+  /* Shadows */
+  --shadow-card:       0 4px 16px rgba(0, 0, 0, 0.35);
+  --shadow-card-hover: 0 14px 38px rgba(0, 0, 0, 0.55);
+  --shadow-btn:        0 4px 15px rgba(102, 126, 234, 0.45);
+  --shadow-btn-hover:  0 6px 22px rgba(102, 126, 234, 0.65);
+
+  /* Transitions */
+  --transition-fast:   0.15s ease;
+  --transition-base:   0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  --transition-smooth: 0.3s ease;
+
+  /* Typography */
+  --font-base: 'Segoe UI', system-ui, -apple-system, Tahoma, Geneva, Verdana, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-base);
+  background: linear-gradient(
+    135deg,
+    var(--color-bg-start) 0%,
+    var(--color-bg-mid)   50%,
+    var(--color-bg-end)   100%
+  );
+  background-attachment: fixed;
+  min-height: 100vh;
+  color: var(--color-white);
+  line-height: 1.5;
+}
+
+/* --- Site Header --------------------------------------------------------- */
+
+.site-header {
+  background: var(--color-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--color-glass-border);
+  padding: var(--space-lg) var(--space-md);
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.site-title {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 800;
+  letter-spacing: -1px;
+  line-height: 1.2;
+  background: linear-gradient(90deg, var(--color-accent), var(--color-accent-end));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.site-subtitle {
+  font-size: clamp(0.8rem, 1.8vw, 1.05rem);
+  color: var(--color-white-70);
+  margin-top: var(--space-xs);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+/* --- Main Content -------------------------------------------------------- */
+
+.main-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-lg) var(--space-md) calc(var(--space-xl) * 1.5);
+}
+
+/* --- Upload Section ----------------------------------------------------- */
+
+.upload-section {
+  margin-bottom: var(--space-xl);
+}
+
+.upload-card {
+  background: var(--color-glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 2px dashed var(--color-glass-border);
+  border-radius: var(--radius-card);
+  padding: var(--space-lg);
+  text-align: center;
+  transition: border-color var(--transition-smooth);
+}
+
+.upload-card:hover {
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.upload-heading {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: var(--space-md);
+  color: var(--color-white);
+}
+
+.upload-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  cursor: pointer;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: var(--color-white);
+  font-size: 1rem;
+  font-weight: 600;
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--radius-btn);
+  box-shadow: var(--shadow-btn);
+  transition:
+    transform var(--transition-smooth),
+    box-shadow var(--transition-smooth);
+}
+
+.upload-label:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-btn-hover);
+}
+
+.upload-label:active {
+  transform: scale(0.97);
+}
+
+.upload-label input[type="file"] {
+  display: none;
+}
+
+/* Image Preview */
+
+.image-preview-wrapper {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  margin-top: var(--space-lg);
+  animation: fadeIn 0.4s ease;
+}
+
+.image-preview-wrapper.visible {
+  display: flex;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+#imagePreview {
+  max-width: 320px;
+  max-height: 260px;
+  width: 100%;
+  object-fit: cover;
+  border-radius: var(--radius-img);
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+}
+
+.remove-btn {
+  background: rgba(239, 68, 68, 0.85);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--radius-btn);
+  padding: var(--space-xs) var(--space-lg);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background var(--transition-smooth),
+    transform var(--transition-smooth);
+}
+
+.remove-btn:hover {
+  background: rgb(239, 68, 68);
+  transform: scale(1.05);
+}
+
+.remove-btn:active {
+  transform: scale(0.97);
+}
+
+/* --- Sound Sections ----------------------------------------------------- */
+
+.sound-section {
+  margin-bottom: var(--space-xl);
+}
+
+.section-heading {
+  font-size: clamp(1.3rem, 3vw, 1.9rem);
+  font-weight: 700;
+  margin-bottom: var(--space-md);
+  padding-left: var(--space-md);
+  border-left: 5px solid var(--color-accent);
+  line-height: 1.3;
+}
+
+/* --- Card Grid ---------------------------------------------------------- */
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+  gap: var(--space-md);
+}
+
+/* --- Sound Card --------------------------------------------------------- */
+
+.sound-card {
+  position: relative;
+  border-radius: var(--radius-card);
+  padding: 1.5rem 0.75rem 1.25rem;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  box-shadow: var(--shadow-card);
+  transition:
+    transform var(--transition-base),
+    box-shadow var(--transition-smooth);
+  will-change: transform;
+  overflow: hidden;
+}
+
+/* Keyboard focus ring */
+.sound-card:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 3px;
+}
+
+/* Sheen overlay on hover */
+.sound-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0);
+  border-radius: var(--radius-card);
+  transition: background var(--transition-smooth);
+  pointer-events: none;
+}
+
+.sound-card:hover {
+  transform: translateY(-8px) scale(1.04);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.sound-card:hover::after {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.sound-card:active {
+  transform: scale(0.93) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+/* Playing state — glow pulse */
+.sound-card.playing {
+  animation: cardPulse 0.7s ease forwards;
+}
+
+@keyframes cardPulse {
+  0%   { box-shadow: var(--shadow-card); transform: scale(1);    }
+  35%  { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0.22), var(--shadow-card-hover); transform: scale(1.07); }
+  100% { box-shadow: var(--shadow-card); transform: scale(1);    }
+}
+
+/* Card Content */
+
+.card-emoji {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 0.55rem;
+  line-height: 1;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.25));
+  pointer-events: none;
+}
+
+.card-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-white);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  margin-bottom: 0.3rem;
+  pointer-events: none;
+}
+
+.card-sound {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.88);
+  font-style: italic;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+  transition: opacity var(--transition-fast);
+}
+
+/* Edit / Upload Sound Button */
+
+.edit-sound-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.35);
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  font-size: 0.72rem;
+  cursor: pointer;
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    opacity var(--transition-smooth),
+    background var(--transition-smooth),
+    transform var(--transition-fast);
+  z-index: 2;
+}
+
+.sound-card:hover .edit-sound-btn {
+  opacity: 1;
+}
+
+.edit-sound-btn:hover {
+  background: rgba(0, 0, 0, 0.6);
+  transform: scale(1.15);
+}
+
+.edit-sound-btn:active {
+  transform: scale(0.95);
+}
+
+/* When a real sound is loaded — always show the ✅ button */
+.sound-card.has-custom-sound .edit-sound-btn {
+  opacity: 1;
+  background: rgba(22, 163, 74, 0.75);
+}
+
+.sound-card.has-custom-sound .edit-sound-btn:hover {
+  background: rgba(22, 163, 74, 1);
+}
+
+.sound-upload-input {
+  display: none;
+}
+
+/* Sound-wave bars (shown while playing) */
+
+.card-sound-wave {
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 3px;
+  height: 22px;
+  margin-top: 0.35rem;
+}
+
+.sound-card.playing .card-sound {
+  display: none;
+}
+
+.sound-card.playing .card-sound-wave {
+  display: flex;
+}
+
+.wave-bar {
+  width: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.wave-bar:nth-child(1) { animation: waveAnim 0.45s 0.00s ease-in-out infinite alternate; }
+.wave-bar:nth-child(2) { animation: waveAnim 0.45s 0.09s ease-in-out infinite alternate; }
+.wave-bar:nth-child(3) { animation: waveAnim 0.45s 0.18s ease-in-out infinite alternate; }
+.wave-bar:nth-child(4) { animation: waveAnim 0.45s 0.09s ease-in-out infinite alternate; }
+.wave-bar:nth-child(5) { animation: waveAnim 0.45s 0.00s ease-in-out infinite alternate; }
+
+@keyframes waveAnim {
+  from { transform: scaleY(0.3); height: 6px;  }
+  to   { transform: scaleY(1.5); height: 18px; }
+}
+
+/* --- Site Footer -------------------------------------------------------- */
+
+.site-footer {
+  text-align: center;
+  padding: var(--space-md);
+  background: var(--color-glass);
+  border-top: 1px solid var(--color-glass-border);
+  color: var(--color-white-70);
+  font-size: 0.875rem;
+}
+
+/* --- Responsive Breakpoints --------------------------------------------- */
+
+@media (max-width: 900px) {
+  .card-grid {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .main-content {
+    padding-top: var(--space-md);
+  }
+
+  .card-grid {
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 0.9rem;
+  }
+
+  .sound-card {
+    padding: 1.1rem 0.5rem 0.9rem;
+  }
+
+  .card-emoji {
+    font-size: 2.4rem;
+  }
+
+  .card-name {
+    font-size: 0.9rem;
+  }
+
+  .card-sound {
+    font-size: 0.72rem;
+  }
+
+  .upload-card {
+    padding: var(--space-md);
+  }
+
+  .upload-heading {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .card-grid {
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: 0.7rem;
+  }
+
+  .card-emoji {
+    font-size: 2rem;
+  }
+
+  .card-name {
+    font-size: 0.82rem;
+  }
+
+  .card-sound {
+    font-size: 0.68rem;
+  }
+}
